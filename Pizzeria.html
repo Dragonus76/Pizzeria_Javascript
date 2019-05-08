@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+	<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Black+And+White+Picture|Modak" rel="stylesheet"> 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"></script>
+
+<script type="text/javascript" src="js/style.js"></script>
+
+
+	<title>Pizzeria_Javascript</title>
+</head>
+<body>
+
+
+
+<h1 class="ml5">
+  <span class="text-wrapper">
+    <span class="line line1"></span>
+    <span class="letters letters-left">Pizzeria</span>
+    <span class="letters ampersand">&amp;</span>
+    <span class="letters letters-right">Makers</span>
+    <span class="line line2"></span>
+  </span>
+</h1>
+
+<div id="divFormuCde">
+    <label>Combien de pizzas désirez-vous ?
+        <input type="number" id="chNbrPiz" />
+    </label>
+    <br />
+    <br />
+    <label>Quel genre de pizzas ?
+        <select id="chTypePizza">
+            <option value="pFromage">Au fromage</option>
+            <option value="pPoivron">Aux poivrons</option>
+            <option value="pRoyale">Royale</option>
+        </select>
+    </label>
+    <br />
+    <br />
+    <label>Dans quelle ville faut-il livrer ?
+        <select id="chLivVille">
+            <option value="En ville">En ville</option>
+            <option value="Sacramento">Courberoute</option>
+            <option value="Passy">Passy-Malaisot</option>
+        </select>
+    </label>
+    <br />
+    <br />
+    <label>Est-ce votre jour d'anniversaire ?
+        <select id="chCliNai">
+            <option value="chOui">Oui !</option>
+            <option value="chNon">Non</option>
+        </select>
+    </label>
+    <br />
+    <br />
+    <button type="button" id="btnCde">Commander</button>
+</div>
+<div id="affTicket"></div>
+
+
+
+
+	<script type="text/javascript">
+		
+
+    anime.timeline({loop: true})
+  .add({
+    targets: '.ml5 .line',
+    opacity: [0.5,1],
+    scaleX: [0, 1],
+    easing: "easeInOutExpo",
+    duration: 700
+  }).add({
+    targets: '.ml5 .line',
+    duration: 600,
+    easing: "easeOutExpo",
+    translateY: function(e, i, l) {
+      var offset = -0.625 + 0.625*2*i;
+      return offset + "em";
+    }
+  }).add({
+    targets: '.ml5 .ampersand',
+    opacity: [0,1],
+    scaleY: [0.5, 1],
+    easing: "easeOutExpo",
+    duration: 600,
+    offset: '-=600'
+  }).add({
+    targets: '.ml5 .letters-left',
+    opacity: [0,1],
+    translateX: ["0.5em", 0],
+    easing: "easeOutExpo",
+    duration: 600,
+    offset: '-=300'
+  }).add({
+    targets: '.ml5 .letters-right',
+    opacity: [0,1],
+    translateX: ["-0.5em", 0],
+    easing: "easeOutExpo",
+    duration: 600,
+    offset: '-=600'
+  }).add({
+    targets: '.ml5',
+    opacity: 0,
+    duration: 1000,
+    easing: "easeOutExpo",
+    delay: 1000
+  });
+
+
+document.getElementById("btnCde").addEventListener("click", gererCde);
+
+function gererCde() {
+    // Récupération des valeurs du formulaire
+    var nbrPizzas = document.getElementById("chNbrPiz").value;
+    var typePizza = document.getElementById("chTypePizza").value;
+    var livVille  = document.getElementById("chLivVille").value;
+    var anniv     = document.getElementById("chCliNai").value;
+
+    var prixCde = calculerPrix(nbrPizzas, typePizza);
+    var livFrais = calculerLivraison(prixCde, livVille, anniv);
+
+    var ticket = "<p>Merci pour votre commande.</p>";
+
+    if (livFrais === 0) {
+        ticket += "<p>Livraison gratuite !</p>";
+    } else {
+        ticket += "<p>La livraison est de " + livFrais +"€.";
+    }
+    ticket += "<p>Soit au total " + (prixCde + livFrais) +"€.";
+    if (anniv === "chOui") {
+      ticket += "<p>Et bon anniversaire !</p>";
+    }
+    // Affiche le ticket de caisse
+    document.getElementById("affTicket").innerHTML = ticket;
+}
+
+function calculerPrix(nbrPizzas, typePizza) {
+    var prixCde = Number(nbrPizzas) * 10;
+    var supplement = 0;
+
+    if (typePizza === "pRoyale") {
+        supplement = Number(nbrPizzas) * 2;
+    }
+
+    prixCde += supplement;
+    return prixCde;
+}
+
+function calculerLivraison(prixCde, livVille, anniv) {
+    var livFrais = 0;
+
+    if (((livVille === "En ville") && (prixCde > 10)) || (anniv === "chOui")) {
+        livFrais = 0;
+    } else {
+        livFrais = 5;
+    }
+    return livFrais;
+}
+
+
+	</script>
+
+</body>
+</html>
